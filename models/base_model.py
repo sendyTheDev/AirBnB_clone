@@ -2,9 +2,9 @@
 """
 This class defines all common attributes/methods for other classes
 """
-import datetime
+from datetime import datetime
 import uuid
-import models
+from models import storage
 
 
 class BaseModel:
@@ -16,6 +16,7 @@ class BaseModel:
                 setattr(self, x, args[0][x])
         else:
             self.created_at = datetime.today()
+            self.updated_at = datetime.today()
             self.id = str(uuid.uuid4())
         for x in kwargs:
             print("kwargs: {}: {}".format(x, kwargs[x]))
@@ -27,7 +28,9 @@ class BaseModel:
         models.storage.save()
 
     def to_dict(self):
-        """ returns a dictionary containing all keys/values of __dict__ of the instance"""
+        """Returns a dictionary containing all keys/values
+        of __dict__ of the instance"""
+
         dictionary = self.__dict__.copy()
         dictionary["created_at"] = self.created_at.isoformat()
         dictionary["updated_at"] = self.updated_at.isoformat()
@@ -36,5 +39,5 @@ class BaseModel:
 
     def __str__(self):
         """Return to the simple representation of our BaseModel"""
-        return "[{}] ({}) {}" \
-                .format(self.__class__.__name__, self.id, self.__dict__)
+        str = "[{}] ({}) {}"
+        return str.format(self.__class__.__name__, self.id, self.__dict__)

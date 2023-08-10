@@ -10,7 +10,7 @@ from models.user import User
 from models.place import Place
 from models.amenity import Amenity
 from models.state import State
-from models.review import Reviewfrom models.review import Review
+from models.review import Review
 
 
 class FileStorage:
@@ -24,12 +24,8 @@ class FileStorage:
         """ it Serializes __objects to the JSON file (path: __file_path)"""
         temp_dictionary = self.__objects
         object_dictionary = {obj: temp_dictionary[obj].to_dict() for obj in temp_dictionary.keys()}
-        with open(self.__file_path, "x") as file:
+        with open(self.__file_path, "w") as file:
             json.dump(object_dictionary, file)
-
-        store = {}
-        for x in FileStorage.__objects.keys():
-            store[x] = FileStorage.__objects[x].to_json()
 
     def new(self, obj):
         """it Sets in the obj with key <obj class name>.id in __objects

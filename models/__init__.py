@@ -1,6 +1,6 @@
 #!/usr/bin/python3
-from models.base_model import BaseModel
+from .engine.file_storage import FileStorage
 
 
-storage = file_storage.FileStorage()
+storage = FileStorage()
 storage.reload()

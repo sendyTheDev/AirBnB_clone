@@ -4,7 +4,6 @@ This class defines all common attributes/methods for other classes
 """
 from datetime import datetime
 import uuid
-from models import storage
 
 
 class BaseModel:
@@ -18,14 +17,13 @@ class BaseModel:
             self.created_at = datetime.today()
             self.updated_at = datetime.today()
             self.id = str(uuid.uuid4())
-        for x in kwargs:
-            print("kwargs: {}: {}".format(x, kwargs[x]))
 
     def save(self):
         """This method is to update self"""
-        self.updated_at = datetime.datetime.today()
-        models.storage.new(self)
-        models.storage.save()
+        from models import storage
+        self.updated_at = datetime.today()
+        storage.new(self)
+        storage.save()
 
     def to_dict(self):
         """Returns a dictionary containing all keys/values

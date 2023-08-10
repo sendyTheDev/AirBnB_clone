@@ -1,6 +1,5 @@
 #!/usr/bin/python3
-from models import *
-
+from .base_model import BaseModel
 
 class State(BaseModel):
     """state."""

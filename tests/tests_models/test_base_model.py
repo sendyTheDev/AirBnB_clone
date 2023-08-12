@@ -8,7 +8,6 @@ class Test_BaseModel(unittest.TestCase):
     Test the base model class instantiation
     """
 
-
     def test_instance_id_is_unique(self):
         self.modelA = BaseModel()
         self.modelB = BaseModel()
@@ -21,6 +20,6 @@ class Test_BaseModel(unittest.TestCase):
 
         self.assertEqual(self.modelA.id, self.modelB.id)
 
+
 if __name__ == "__main__":
     unittest.main()
-

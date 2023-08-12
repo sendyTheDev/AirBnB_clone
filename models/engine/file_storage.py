@@ -40,8 +40,8 @@ class FileStorage:
     def reload(self):
         """it deserializes the JSON file to __objects if file exists"""
         try:
-            with open(self.__file_path, "r") as storeFile:
-                obj_dict = json.load(storeFile)
+            with open(self.__file_path, "r") as file:
+                obj_dict = json.load(file)
                 for b in obj_dict.values():
                     class_name = b["__class__"]
                     del b["__class__"]

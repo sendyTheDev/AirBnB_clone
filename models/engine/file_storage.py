@@ -18,7 +18,7 @@ class FileStorage:
     __objects = {}
 
     def all(self):
-        return FileStorage.__objects
+        return self.__objects
 
     def save(self):
         """ it Serializes __objects to the JSON file (path: __file_path)"""
@@ -35,7 +35,7 @@ class FileStorage:
         Args:
             obj (BaseModel): Object to be added
         """
-        self.__objects["{}.{}".format(obj.__class__.__name__, obj.id)] = obj
+        self.__objects["{}.{}".format(obj.__class__.__name__, obj)] = obj
 
     def reload(self):
         """it deserializes the JSON file to __objects if file exists"""
@@ -45,6 +45,6 @@ class FileStorage:
                 for b in obj_dict.values():
                     class_name = b["__class__"]
                     del b["__class__"]
-                    self.new(eval(class_name)(**b))
+                    self.new(eval(class_name))
         except FileNotFoundError:
             return

@@ -1,36 +1,38 @@
 #!/usr/bin/python3
 """Defines unittests for console.py"""
 import unittest
-from models import storage
 from models.engine.file_storage import FileStorage
 from console import HBNBCommand
 from unittest.mock import patch
+import sys
+import os
+from io import StringIO
+from models import storage
+from models.user import User
 
+class TestConsole(unittest.TestCase):
+
+    def setup(self):
+        storage. Reload()
 
 class TestHBNBCommand_help(unittest.TestCase):
     """Unittests for testing help messages of the HBNB"""
 
     def test_help_quit(self):
-        Q = "Quit command to exit the program."
-        with patch("sys.stdout", new=StringIO()) as output:
-            self.assertFalse(HBNBCommand().onecmd("help quit"))
-            self.assertEqual(h, output.getvalue().strip())
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd('help quit')
+            self.assertEqual(f.getvalue(), 'Quit command to exit the program\n')
 
-    def test_help_create(self):
-        Q = ("Usage: create <class>\n"
-             "       Create a new class instance and print its id.")
-        with patch("sys.stdout", new=StringIO()) as output:
-            self.assertFalse(HBNBCommand().onecmd("help create"))
-            self.assertEqual(h, output.getvalue().strip())
+class TestHBNBCommand_show(unittest.TestCase):
+    """Unittests for testing show from the HBNB command"""
 
-    def test_help(self):
-        Q = ("Documented commands (type help <topic>):\n"
-             "========================================\n"
-             "EOF  all  count  create  destroy  help  quit  show  update")
-        with patch("sys.stdout", new=StringIO()) as output:
-            self.assertFalse(HBNBCommand().onecmd("help"))
-            self.assertEqual(h, output.getvalue().strip())
-
+    @classmethod
+    def setUp(self):
+        try:
+            os.rename("file.json", "tmp")
+        except IOError:
+            pass
+        FileStorage.__objects = {}
 
 class TestHBNBCommand_create(unittest.TestCase):
     """Unittests for testing create from the HBNB command interpreter."""
@@ -42,3 +44,51 @@ class TestHBNBCommand_create(unittest.TestCase):
         except IOError:
             pass
         FileStorage.__objects = {}
+
+class TestHBNBCommand_update(unittest.TestCase):
+    """Unittests for testing update from the HBNB command"""
+
+    def test_update_missing_attr_value_dot_notation(self):
+        correct = "** value missing **"
+        with patch("sys.stdout", new=StringIO()) as output:
+            HBNBCommand().onecmd("create BaseModel")
+            testId = output.getvalue().strip()
+        with patch("sys.stdout", new=StringIO()) as output:
+            HBNBCommand().onecmd("create User")
+            testId = output.getvalue().strip()
+
+    def test_update_valid_string_attr_space_notation(self):
+        with patch("sys.stdout", new=StringIO()) as output:
+            HBNBCommand().onecmd("create User")
+            testId = output.getvalue().strip()
+        testCmd = "update User {} attr_name 'attr_value'".format(testId)
+        self.assertFalse(HBNBCommand().onecmd(testCmd))_
+        self.assertEqual(" 'attr_value' ", test_dict["attr_name"])
+
+        with patch("sys.stdout", new=StringIO()) as output:
+            HBNBCommand().onecmd("create Review")
+            tId = output.getvalue().strip()
+        testCmd = "Review.update({}, attr_name, 'attr_value')".format(tId)
+        self.assertFalse(HBNBCommand().onecmd(testCmd))
+        test_dict = storage.all()["Review.{}".format(tId)].__dict__
+        self.assertEqual("attr_value", test_dict["attr_name"])
+
+    def test_update_valid_dictionary_space_notation(self):
+        with patch("sys.stdout", new=StringIO()) as output:
+            HBNBCommand().onecmd("create BaseModel")
+            testId = output.getvalue().strip()
+        testCmd = "update BaseModel {} ".format(testId)
+        testCmd += "{'attr_name': 'attr_value'}"
+        HBNBCommand().onecmd(testCmd)
+        self.assertEqual("attr_value", test_dict["attr_name"])
+
+    def test_all_users(self):
+        user1 = User(id=1, email='test1@test.com', password='test1')
+        user2 = User(id=2, email='test2@test.com', password='test2')
+        storage.save()
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd('all User')
+            self.assertEqual(f.getvalue(), str(user1) + '\n' + str(user2))
+
+if __name__ == "__main__":
+    unittest.main()

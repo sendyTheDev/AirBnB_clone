@@ -10,18 +10,22 @@ from io import StringIO
 from models import storage
 from models.user import User
 
+
 class TestConsole(unittest.TestCase):
 
     def setup(self):
         storage. Reload()
 
+
 class TestHBNBCommand_help(unittest.TestCase):
     """Unittests for testing help messages of the HBNB"""
 
     def test_help_quit(self):
+        msg = 'Quit command to exit the program\n'
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd('help quit')
-            self.assertEqual(f.getvalue(), 'Quit command to exit the program\n')
+            self.assertEqual(f.getvalue(), msg)
+
 
 class TestHBNBCommand_show(unittest.TestCase):
     """Unittests for testing show from the HBNB command"""
@@ -34,6 +38,7 @@ class TestHBNBCommand_show(unittest.TestCase):
             pass
         FileStorage.__objects = {}
 
+
 class TestHBNBCommand_create(unittest.TestCase):
     """Unittests for testing create from the HBNB command interpreter."""
 
@@ -44,6 +49,7 @@ class TestHBNBCommand_create(unittest.TestCase):
         except IOError:
             pass
         FileStorage.__objects = {}
+
 
 class TestHBNBCommand_update(unittest.TestCase):
     """Unittests for testing update from the HBNB command"""
@@ -62,7 +68,7 @@ class TestHBNBCommand_update(unittest.TestCase):
             HBNBCommand().onecmd("create User")
             testId = output.getvalue().strip()
         testCmd = "update User {} attr_name 'attr_value'".format(testId)
-        self.assertFalse(HBNBCommand().onecmd(testCmd))_
+        self.assertFalse(HBNBCommand().onecmd(testCmd))
         self.assertEqual(" 'attr_value' ", test_dict["attr_name"])
 
         with patch("sys.stdout", new=StringIO()) as output:
@@ -89,6 +95,7 @@ class TestHBNBCommand_update(unittest.TestCase):
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd('all User')
             self.assertEqual(f.getvalue(), str(user1) + '\n' + str(user2))
+
 
 if __name__ == "__main__":
     unittest.main()

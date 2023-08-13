@@ -33,7 +33,7 @@ class BaseModel:
             self.updated_at = datetime.today()
             self.id = str(uuid.uuid4())
             models.storage.new(self)
- 
+
     def save(self):
         """This method is to update self"""
         self.updated_at = datetime.today()
@@ -45,7 +45,9 @@ class BaseModel:
         return str.format(self.__class__.__name__, self.id, self.__dict__)
 
     def to_dict(self):
-        """returns  a dict containing all keys/values of __dict__ of the instance"""
+        """returns  a dict containing
+           all keys/values of __dict__ of the instance
+        """
         my_dict = self.__dict__
         my_dict['created_at'] = datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%f")
         my_dict['updated_at'] = datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%f")

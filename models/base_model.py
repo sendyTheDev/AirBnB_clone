@@ -10,14 +10,24 @@ class BaseModel:
     """Base class for all storage objects in this project"""
     def __init__(self, *args, **kwargs):
         """initialize class object"""
-        if len(args) > 0:
-            for x in args[0]:
-                setattr(self, x, args[0][x])
+        if kwargs:
+            for key, value in kwargs.items():
+                if key == 'created_at' or key == 'updated_at':
+                    # Convert string to datetime
+                    value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
+                if key != '__class__':
+                    setattr(self, key, value)
+            if 'id' not in kwargs:
+                self.id = str(uuid.uuid4())
+            if 'created_at' not in kwargs:
+                self.created_at = datetime.today()
+            if 'updated_at' not in kwargs:
+                self.updated_at = datetime.today()
         else:
             self.created_at = datetime.today()
             self.updated_at = datetime.today()
             self.id = str(uuid.uuid4())
-
+ 
     def save(self):
         """This method is to update self"""
         from models import storage
